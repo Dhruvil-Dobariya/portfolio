@@ -1,0 +1,31 @@
+import { useEffect, useRef } from "react";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
+
+export function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+
+    const trigger = ScrollTrigger.create({
+      start: 0,
+      end: () => document.documentElement.scrollHeight - window.innerHeight,
+      onUpdate: (self) => {
+        gsap.set(bar, { scaleX: self.progress });
+      },
+    });
+
+    return () => trigger.kill();
+  }, []);
+
+  return (
+    <div className="fixed inset-x-0 top-0 z-[60] h-[2px] bg-transparent">
+      <div
+        ref={barRef}
+        className="h-full origin-left bg-accent"
+        style={{ transform: "scaleX(0)" }}
+      />
+    </div>
+  );
+}
