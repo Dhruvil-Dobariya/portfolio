@@ -6,7 +6,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { CursorGlow } from "@/components/layout/CursorGlow";
-import { PageTransitionOverlay } from "@/components/layout/PageTransitionOverlay";
 import { Hero } from "@/components/sections/Hero";
 import { Ethos } from "@/components/sections/Ethos";
 import { Experience } from "@/components/sections/Experience";
@@ -26,7 +25,6 @@ export default function App() {
     <>
       <ScrollProgress />
       <CursorGlow />
-      <PageTransitionOverlay />
       <Navbar />
       <main>
         <Hero />

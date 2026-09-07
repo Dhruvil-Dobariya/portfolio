@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { isNavScrollActive } from "@/lib/lenis";
 
 const sentence =
   "Most developers stop at the interface. I go further — designing the database schema, building the API that serves it, shipping the mobile app that consumes it, and shaping the screen people actually touch every day.";
@@ -18,16 +19,24 @@ export function Ethos() {
     const ctx = gsap.context(() => {
       const targets = wordsRef.current.filter(Boolean);
 
-      gsap.to(targets, {
+      const tween = gsap.to(targets, {
         color: "#f2f2f4",
         stagger: 1,
         ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=140%",
-          scrub: 0.4,
-          pin: true,
+        paused: true,
+      });
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "+=140%",
+        pin: true,
+        onUpdate: (self) => {
+          // Skip while a header/footer nav-jump is animating through this
+          // section — the word-by-word reveal should track a person's own
+          // scroll pace, not flash through during a fast programmatic scroll.
+          if (isNavScrollActive()) return;
+          tween.progress(self.progress);
         },
       });
     }, sectionRef);

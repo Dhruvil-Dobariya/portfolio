@@ -44,7 +44,9 @@
   }
 
   body {
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 26px 26px;
     color: var(--text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -54,6 +56,12 @@
   ::selection {
     background: rgba(var(--accent-rgb), 0.35);
     color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 }
 

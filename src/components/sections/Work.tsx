@@ -1,18 +1,32 @@
-import { useEffect, useRef, useState } from "react";
-import { Bluetooth, Boxes, Sparkles, Users2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  Bluetooth,
+  Boxes,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  Users2,
+} from "lucide-react";
+import { useState, type CSSProperties } from "react";
 import { projects } from "@/data/projects";
-import { gsap } from "@/lib/gsap";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Reveal } from "@/components/ui/Reveal";
-import { WorkPanel } from "./WorkPanel";
 
 const icons = {
   access: Bluetooth,
   crm: Users2,
   ai: Sparkles,
   inventory: Boxes,
+} as const;
+
+const accents = {
+  access: "#6a5cff",
+  crm: "#2dd4bf",
+  ai: "#f59e0b",
+  inventory: "#38bdf8",
 } as const;
 
 function WorkHeader() {
@@ -34,34 +48,125 @@ function WorkHeader() {
   );
 }
 
-function StaticWorkList() {
+export function Work() {
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const project = projects[index];
+  const Icon = icons[project.icon];
+  const accent = accents[project.icon];
+
+  const go = (next: number) => {
+    setDirection(next > index ? 1 : -1);
+    setIndex((next + projects.length) % projects.length);
+  };
+
   return (
-    <section id="work" className="relative bg-bg-elevated/40 py-28 md:py-36">
+    <section
+      id="work"
+      className="relative flex min-h-[100svh] flex-col justify-center bg-bg-elevated/40 py-16 md:py-24"
+      style={{ "--pa": accent } as CSSProperties}
+    >
       <WorkHeader />
-      <div className="mt-16 space-y-16">
-        {projects.map((project) => {
-          const Icon = icons[project.icon];
-          return (
-            <Reveal key={project.index} as="div">
-              <Container className="border-t border-border pt-10">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-sm text-text-tertiary">{project.index} / 04</span>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-border-strong text-accent-soft">
-                    <Icon size={18} />
-                  </span>
-                </div>
-                <h3 className="mt-5 text-2xl font-semibold tracking-tight text-text sm:text-3xl">
+
+      <Container className="mt-14">
+        <Reveal delay={0.18}>
+          <div className="flex items-center justify-between">
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-xl border transition-colors duration-500"
+              style={{ borderColor: "color-mix(in srgb, var(--pa) 40%, transparent)", color: accent }}
+            >
+              <Icon size={18} />
+            </span>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm text-text-tertiary">{project.index} / 04</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => go(index - 1)}
+                  aria-label="Previous project"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border-strong text-text-secondary transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  onClick={() => go(index + 1)}
+                  aria-label="Next project"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border-strong text-text-secondary transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="relative mt-6 overflow-hidden rounded-2xl border bg-bg-elevated/60 p-6 transition-colors duration-500 sm:p-10"
+            style={{ borderColor: "color-mix(in srgb, var(--pa) 25%, var(--border-strong))" }}
+          >
+            <div
+              className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-20 blur-[90px] transition-colors duration-500"
+              style={{ background: accent }}
+              aria-hidden
+            />
+
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={project.index}
+                custom={direction}
+                initial={{ opacity: 0, x: direction * 32 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -32 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="relative"
+              >
+                <h3 className="max-w-2xl text-2xl font-semibold tracking-tight text-text sm:text-3xl md:text-4xl">
                   {project.category}
                 </h3>
-                <p className="mt-2 text-lg text-text-secondary">{project.tagline}</p>
+                <p className="mt-3 text-lg text-text-secondary">{project.tagline}</p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {project.impact.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border px-3 py-1 text-xs font-medium"
+                      style={{
+                        borderColor: "color-mix(in srgb, var(--pa) 35%, transparent)",
+                        color: accent,
+                        backgroundColor: "color-mix(in srgb, var(--pa) 10%, transparent)",
+                      }}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-3 rounded-xl border border-border bg-bg/40 px-4 py-3 font-mono text-xs text-text-secondary">
+                  {project.flow.map((stage, i) => (
+                    <span key={stage} className="flex items-center gap-2">
+                      <span className="rounded-md border border-border-strong bg-bg-elevated px-2.5 py-1.5 text-text-secondary">
+                        {stage}
+                      </span>
+                      {i < project.flow.length - 1 && (
+                        <ArrowRight size={13} className="shrink-0 text-text-tertiary" />
+                      )}
+                    </span>
+                  ))}
+                </div>
+
                 <ul className="mt-6 space-y-3">
                   {project.highlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-3 text-sm leading-relaxed text-text-secondary sm:text-base">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                    <li
+                      key={highlight}
+                      className="flex gap-3 text-sm leading-relaxed text-text-secondary sm:text-base"
+                    >
+                      <span
+                        className="mt-2 h-1 w-1 shrink-0 rounded-full"
+                        style={{ background: accent }}
+                      />
                       {highlight}
                     </li>
                   ))}
                 </ul>
+
                 <div className="mt-6 flex flex-wrap gap-2">
                   {project.tech.map((tech) => (
                     <span
@@ -72,91 +177,26 @@ function StaticWorkList() {
                     </span>
                   ))}
                 </div>
-              </Container>
-            </Reveal>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </Reveal>
 
-function ScrollDrivenWork() {
-  const pinRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      const track = trackRef.current;
-      const pin = pinRef.current;
-      if (!track || !pin) return;
-
-      const getDistance = () => track.scrollWidth - window.innerWidth;
-
-      const tween = gsap.to(track, {
-        x: () => -getDistance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top",
-          end: () => "+=" + getDistance(),
-          scrub: 0.6,
-          pin: true,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            setActiveIndex(Math.min(projects.length - 1, Math.round(self.progress * (projects.length - 1))));
-          },
-        },
-      });
-
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    });
-
-    return () => mm.revert();
-  }, []);
-
-  return (
-    <section id="work" className="relative bg-bg-elevated/40">
-      <div className="pt-28 md:pt-36">
-        <WorkHeader />
-
-        <div className="mt-14 hidden items-center gap-2 px-6 md:flex md:px-10">
-          {projects.map((project, i) => (
-            <span
-              key={project.index}
-              className={`h-[3px] rounded-full transition-all duration-500 ${
-                i === activeIndex ? "w-8 bg-accent" : "w-4 bg-border-strong"
-              }`}
+        <Reveal delay={0.24} className="mt-6 flex items-center justify-center gap-2">
+          {projects.map((p, i) => (
+            <button
+              key={p.index}
+              onClick={() => go(i)}
+              aria-label={`Show project ${i + 1}`}
+              className={cn(
+                "h-[3px] rounded-full transition-all duration-500",
+                i === index ? "w-8" : "w-4 bg-border-strong hover:bg-text-tertiary"
+              )}
+              style={i === index ? { background: accent } : undefined}
             />
           ))}
-        </div>
-
-        <p className="mt-10 px-6 font-mono text-xs uppercase tracking-[0.2em] text-text-tertiary md:hidden">
-          Swipe to explore →
-        </p>
-      </div>
-
-      <div ref={pinRef} className="relative mt-10 h-[70vh] min-h-[560px] overflow-hidden md:h-screen md:min-h-0">
-        <div
-          ref={trackRef}
-          className="flex h-full snap-x snap-mandatory gap-0 overflow-x-auto md:w-max md:snap-none md:overflow-visible"
-        >
-          {projects.map((project, i) => (
-            <WorkPanel key={project.index} project={project} isActive={i === activeIndex} />
-          ))}
-        </div>
-      </div>
+        </Reveal>
+      </Container>
     </section>
   );
-}
-
-export function Work() {
-  const reducedMotion = useReducedMotion();
-  return reducedMotion ? <StaticWorkList /> : <ScrollDrivenWork />;
 }

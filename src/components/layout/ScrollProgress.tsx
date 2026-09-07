@@ -10,7 +10,8 @@ export function ScrollProgress() {
 
     const trigger = ScrollTrigger.create({
       start: 0,
-      end: () => document.documentElement.scrollHeight - window.innerHeight,
+      end: "max",
+      refreshPriority: -1,
       onUpdate: (self) => {
         gsap.set(bar, { scaleX: self.progress });
       },

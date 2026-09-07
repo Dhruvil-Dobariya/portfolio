@@ -5,6 +5,8 @@ export interface Project {
   tech: string[];
   highlights: string[];
   icon: "access" | "crm" | "ai" | "inventory";
+  impact: string[];
+  flow: string[];
 }
 
 export const projects: Project[] = [
@@ -27,6 +29,8 @@ export const projects: Project[] = [
       "Profiled and tuned high-traffic endpoints, cutting API response times and hardening error handling for production reliability.",
     ],
     icon: "access",
+    impact: ["Payment Gateway", "BLE Smart Access", "Full-Stack Ownership"],
+    flow: ["Mobile App", "NestJS API", "BLE Gate + Payments"],
   },
   {
     index: "02",
@@ -41,6 +45,8 @@ export const projects: Project[] = [
       "Shipped a React Native (Expo) app for suppliers and customers with real-time activity tracking and push notifications.",
     ],
     icon: "crm",
+    impact: ["Health Scoring", "GraphQL API", "Real-Time Mobile"],
+    flow: ["Web + Mobile", "GraphQL API", "PostgreSQL"],
   },
   {
     index: "03",
@@ -54,6 +60,8 @@ export const projects: Project[] = [
       "Integrated Stripe for plan purchases and credit top-ups, plus a referral system granting bonus credits for invites.",
     ],
     icon: "ai",
+    impact: ["AI Review Pipeline", "Multi-Provider Auth", "Stripe Billing"],
+    flow: ["Upload UI", "AI Analysis Engine", "Stripe + Credits"],
   },
   {
     index: "04",
@@ -67,5 +75,7 @@ export const projects: Project[] = [
       "Added barcode-based product scanning and stock/price inquiry requests between warehouses and suppliers.",
     ],
     icon: "inventory",
+    impact: ["Multi-Warehouse Sync", "Barcode Scanning", "Cross-Platform App"],
+    flow: ["Mobile Scanner", "NestJS API", "Multi-Warehouse DB"],
   },
 ];

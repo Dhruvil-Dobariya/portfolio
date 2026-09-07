@@ -17,7 +17,7 @@ const sectionIds = ["hero", "ethos", ...navItems.map((item) => item.id)];
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const activeId = useActiveSection(sectionIds);
+  const [activeId, setActiveIdManually, clearActiveOverride] = useActiveSection(sectionIds);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,7 +35,8 @@ export function Navbar() {
 
   const go = (id: string) => {
     setMobileOpen(false);
-    scrollToId(id);
+    setActiveIdManually(id);
+    scrollToId(id, clearActiveOverride);
   };
 
   return (
