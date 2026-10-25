@@ -1,0 +1,51 @@
+/*
+ * Color themes: one dark, one light. Every color on the site comes from
+ * these tokens; the active one is set on <html data-theme> by
+ * src/theme/themes.ts (and before first paint by the script in index.html).
+ */
+
+/* Dark — charcoal, silver, racing red. */
+:root,
+[data-theme="dark"] {
+  --bg: #2a2a2a;
+  --surface: #323232;
+  --surface-2: #3b3b3b;
+  --text: #f4f4f4;
+  --muted: #c0c0c0;
+  --line: rgb(192 192 192 / 0.16);
+  --line-strong: rgb(192 192 192 / 0.32);
+  --accent: #e10600;
+  --accent-ink: #ffffff;
+  --accent-text: #ff6b61;
+  --accent-2: #c0c0c0;
+  --glow: rgb(225 6 0 / 0.22);
+  --shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+/* Light — sage, grey, burnt orange. */
+[data-theme="light"] {
+  --bg: #f0f1ec;
+  --surface: #e5e8de;
+  --surface-2: #d9dfd0;
+  --text: #22261e;
+  --muted: #555c4d;
+  --line: rgb(34 38 30 / 0.13);
+  --line-strong: rgb(34 38 30 / 0.28);
+  --accent: #c25100;
+  --accent-ink: #ffffff;
+  --accent-text: #a84500;
+  --accent-2: #9caf88;
+  --glow: rgb(156 175 136 / 0.5);
+  --shadow: 0 20px 50px rgb(34 38 30 / 0.1);
+  --aurora-opacity: 0.24;
+  --grain-opacity: 0.045;
+  color-scheme: light;
+}
+
+/* Mode-switch reveal: the circular clip is animated from ThemeToggle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}

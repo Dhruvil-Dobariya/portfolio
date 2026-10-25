@@ -32,6 +32,7 @@ export const skillGroups: SkillGroup[] = [
     items: [
       "PostgreSQL",
       "MySQL",
+      "Supabase",
       "Schema Design",
       "Indexing",
       "Query Optimization",
@@ -40,7 +41,6 @@ export const skillGroups: SkillGroup[] = [
   {
     label: "Integrations",
     items: [
-      "Docker",
       "RabbitMQ",
       "Socket.io",
       "WebRTC",
@@ -59,12 +59,25 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
+    label: "Deployment & release",
+    items: [
+      "Docker",
+      "GitHub Actions (CI/CD)",
+      "Nginx",
+      "PM2",
+      "GleSYS Cloud",
+      "Google Play Console",
+      "App Store Connect",
+    ],
+  },
+  {
     label: "Tools",
     items: [
       "Git",
       "GitHub",
       "Bitbucket",
       "Postman",
+      "Swagger",
       "Source Tree",
       "Chrome DevTools",
       "Jira",

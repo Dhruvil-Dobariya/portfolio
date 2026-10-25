@@ -1,5 +1,5 @@
-import { Studio } from "@/components/studio/Studio";
+import { Site } from "@/components/site/Site";
 
 export default function App() {
-  return <Studio />;
+  return <Site />;
 }
